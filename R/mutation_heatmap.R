@@ -30,6 +30,7 @@ mutation_heatmap <- function(data_frame, recurrence_cutoff = 0, grid = TRUE, lab
   
   # add in a count of mutations at the sample level before anything is stripped out and save for mutation recurrence plot
   data_frame2 <- add_mutation_counts(data_frame)
+  data_frame2$trv_type <- factor(data_frame2$trv_type, levels=c("Non Synonymous", "Synonymous"))
   
   # Remove trv_type that are not the most deleterious for a given gene/sample
   data_frame <- hiearchial_remove_trv_type(data_frame, file_type=file_type)
@@ -49,6 +50,11 @@ mutation_heatmap <- function(data_frame, recurrence_cutoff = 0, grid = TRUE, lab
   data_frame2$sample <- factor(data_frame2$sample, levels=sample_order)
   p3 <- plot_mutation_recurrence(data_frame2, coverage_space)
   
+  #remove after komen
+  x_label <- xlab(paste0('Sample (n=', nlevels(data_frame$sample), ')'))
+  clin_data$samples <- factor(clin_data$samples, levels=sample_order)
+  tmp_plot <- ggplot(clin_data, aes(x=samples, y=variable, fill=value)) + geom_tile() + theme(axis.ticks.x=element_blank(), axis.ticks.y=element_blank(), axis.text.x=element_blank(), axis.title.x=element_text(size=16), legend.title=element_blank(), axis.title.y=element_blank(), axis.text.y=element_text(size=14, colour='black'), legend.position='right', plot.margin=unit(c(-1,1,.5,.7), 'lines')) + scale_fill_manual(breaks=c('any relapse', 'no relapse', 'death from breast cancer (event)', 'alive (uncensored)', 'lobular', 'ductal', 'Her2', 'Basal', 'LumA', 'LumB', 'no relapse', 'Normal', 'unknown'), values=c('alive (uncensored)'='#225533', 'any relapse'='#44bbcc', 'lobular'='#CE1836', 'death from breast cancer (event)'='#F85931', 'ductal'='#C7FCD7', 'Her2'='hotpink2', 'Basal'='firebrick2', 'LumA'='blue4', 'LumB'='deepskyblue', 'no relapse'='#4169E1', 'Normal'='green4', 'unknown'='#000000')) + guides(fill=guide_legend(ncol=2)) + xlab(x_label)
+  
   # Plot the Left Bar Chart
   p2 <- plot_bar(data_frame)
   
@@ -59,7 +65,7 @@ mutation_heatmap <- function(data_frame, recurrence_cutoff = 0, grid = TRUE, lab
   p1 <- plot_heatmap(data_frame, grid = grid, label_x = label_x, gene_label_size = gene_label_size, file_type = file_type)	
   
   # Align the Plots and return as 1 plot
-  pA <- align_y(p2, p1, p3, title)
+  pA <- align_y(p2, p1, p3, tmp_plot, title)
   
   return(pA)
 }

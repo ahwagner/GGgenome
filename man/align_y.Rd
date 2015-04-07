@@ -4,7 +4,7 @@
 \alias{align_y}
 \title{align plots}
 \usage{
-align_y(p2, p1, p3, title)
+align_y(p2, p1, p3, p4, title)
 }
 \arguments{
 \item{p2}{ggplot object displaying mutation burden on gene}

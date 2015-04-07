@@ -8,7 +8,7 @@
 #' @param title optional a character string giving a title for the plot
 #' @return a grob object
 
-align_y <- function(p2, p1, p3, title)
+align_y <- function(p2, p1, p3, p4, title)
 {
   
   #############################################################################################################
@@ -22,12 +22,15 @@ align_y <- function(p2, p1, p3, title)
   gA <- ggplotGrob(p2)
   gB <- ggplotGrob(p1)
   gC <- ggplotGrob(p3)
+  gd <- ggplotGrob(p4)
   blankPanel<-grid.rect(gp=gpar(col="white"))
   
   # Adjust the grob widths so p1 and p3 plots line up
-  maxwidth = grid::unit.pmax(gB$widths[2:5,], gC$widths[2:5,])
+  maxwidth = grid::unit.pmax(gB$widths[2:5,], gC$widths[2:5,], gd$widths[2:5,])
   gC$widths[2:5] <- as.list(maxwidth)
   gB$widths[2:5] <- as.list(maxwidth)
+  #remove after komen (above gd and below)
+  gd$widths[2:5] <- as.list(maxwidth)
   
   # Adjust the grob heights so p1, and p2 plots line up
   maxheight = grid::unit.pmax(gA$heights[2:5,], gB$heights[2:5,])
@@ -37,7 +40,8 @@ align_y <- function(p2, p1, p3, title)
   # plot the grobs with grid.arrange
   if(is.character(title))
   {
-    p1 <- grid.arrange(blankPanel, gC, gA, gB, ncol=2, nrow=2, widths=c(1,4), heights=c(1,4), main=textGrob(title, gp=gpar(fontsize=20)))
+    #remove after komen
+    p1 <- grid.arrange(blankPanel, gC, gA, gB, blankPanel, gd, ncol=2, nrow=3, widths=c(.8,4), heights=c(1,4,1.2), main=textGrob(title, gp=gpar(fontsize=20)))
   } else {
     p1 <- grid.arrange(blankPanel, gC, gA, gB, ncol=2, nrow=2, widths=c(1,4), heights=c(1,4))
   }

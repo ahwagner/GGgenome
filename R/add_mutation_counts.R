@@ -19,8 +19,12 @@ add_mutation_counts <- function(data_frame)
   data_frame$trv_type[toupper(data_frame$trv_type) == toupper('silent')] <- 'Synonymous'
   data_frame$trv_type <- factor(data_frame$trv_type, levels=c('Synonymous', 'Non Synonymous'))
   
-  # Obtain a data frame of mutation counts on the sample level
+  # Obtain a data frame of mutation counts on the sample level changing samples with NA values to 0
   mutation_counts <- table(data_frame[,c('sample', 'trv_type')])
+  mutation_counts <- as.data.frame.matrix(mutation_counts)
+  mutation_counts$sample <- rownames(mutation_counts)
+  mutation_counts$Synonymous[mutation_counts$Synonymous == 0] <- NA
+  mutation_counts$'Non Synonymous'[mutation_counts$'Non Synonymous' == 0] <- NA
   mutation_counts <- as.data.frame(melt(mutation_counts))
   colnames(mutation_counts) <- c('sample', 'trv_type', 'mutation_total')
   

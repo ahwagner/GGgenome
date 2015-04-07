@@ -12,22 +12,20 @@ plot_mutation_recurrence <- function(data_frame, coverage_space)
   #################################### Function to plot the top margin barplot ################################################
   #############################################################################################################################
   
-  # Add in mutations per MB calculation
-  data_frame$mutation_per_MB <- data_frame$mutation_total/coverage_space * 1000000
-  
-  #print(data_frame)
+  # Add in mutations per MB calculation, remove last part after komen
+  data_frame$mutation_per_MB <- (data_frame$mutation_total/coverage_space * 1000000)*(1+(1-(1599/35901)))
   
   # Alter GGplot2 Theme 
-  theme <- theme(panel.border =  element_blank(), axis.line =  element_line(), panel.background=element_rect(fill='white'), panel.grid.major=element_blank(), panel.grid.minor=element_blank(), axis.ticks.x=element_blank(), axis.text.x=element_blank(), axis.title.x=element_blank(), legend.title=element_text(size=14))
+  theme <- theme(axis.title.y=element_text(size=16, vjust=-.5), panel.border =  element_blank(), axis.line =  element_line(), panel.background=element_rect(fill='white'), panel.grid.major=element_blank(), panel.grid.minor=element_blank(), axis.ticks.x=element_blank(), axis.text.x=element_blank(), axis.title.x=element_blank(), legend.title=element_text(size=14), plot.margin=unit(c(1,1,-1,.7), 'lines'))
   
   # Add Legend
-  legend <- scale_fill_manual(name="Translational Effect", values=c("red", "blue"), breaks=c("Synonymous", "Non Synonymous"), drop=FALSE)
+  legend <- scale_fill_manual(name="Translational Effect", values=c("blue", "red"), breaks=c("Non Synonymous", "Synonymous"), drop=T)
   
   # add y label
   y_label <- ylab('Mutations per MB')
   
   # ggplot2 call
-  p1 <- ggplot(data_frame, aes(x=sample, y=mutation_per_MB, fill=trv_type)) + geom_bar(stat='identity', alpha=.75) + theme + y_label + legend
+  p1 <- ggplot(data_frame, aes(x=sample, y=mutation_per_MB, fill=trv_type)) + geom_bar(stat='identity', alpha=.75, width=1) + theme + y_label + legend
   
   return(p1)
 }
