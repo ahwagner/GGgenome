@@ -13,7 +13,8 @@ plot_mutation_recurrence <- function(data_frame, coverage_space)
   #############################################################################################################################
   
   # Add in mutations per MB calculation, remove last part after komen
-  data_frame$mutation_per_MB <- (data_frame$mutation_total/coverage_space * 1000000)*(1+(1-(1599/35901)))
+  #data_frame$mutation_per_MB <- (data_frame$mutation_total/coverage_space * 1000000)*(1+(1-(1599/35901)))
+  data_frame$mutation_per_MB <- (data_frame$mutation_total * (37500/1599))/coverage_space * 1000000
   
   # Alter GGplot2 Theme 
   theme <- theme(axis.title.y=element_text(size=16, vjust=-.5), panel.border =  element_blank(), axis.line =  element_line(), panel.background=element_rect(fill='white'), panel.grid.major=element_blank(), panel.grid.minor=element_blank(), axis.ticks.x=element_blank(), axis.text.x=element_blank(), axis.title.x=element_blank(), legend.title=element_text(size=14), plot.margin=unit(c(1,1,-1,.7), 'lines'))
